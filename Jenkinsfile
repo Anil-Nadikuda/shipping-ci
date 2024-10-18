@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-            git branch: 'main',credentialsId: 'git-cred', url: 'https://github.com/Anil-Nadikuda/Blue-Green.git'
+            git branch: 'main',credentialsId: 'git-cred', url: 'https://github.com/Anil-Nadikuda/shipping-ci.git'
              sh 'ls -l'
                 }
             }
