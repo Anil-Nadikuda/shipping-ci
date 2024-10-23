@@ -39,39 +39,49 @@ pipeline {
         }
 
         //Uncomment if you want to run SonarQube analysis
-        stage('SonarQube Analysis') {
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         script {
+        //             sh """
+        //             sonar-scanner
+        //             """
+        //         }
+        //     }
+        // }
+
+        stage('Trivy Analysis') {
             steps {
                 script {
                     sh """
-                    sonar-scanner
+                    trivy fs --format table -o fs.html .
                     """
                 }
             }
         }
 
-        stage('Publish Artifact') {
-            steps {
-                script {
-                    def artifactPath = "target/${env.ARTIFACT_ID}-${env.VERSION}.jar"
+        // stage('Publish Artifact') {
+        //     steps {
+        //         script {
+        //             def artifactPath = "target/${env.ARTIFACT_ID}-${env.VERSION}.jar"
                     
-                    nexusArtifactUploader(
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        nexusUrl: '3.89.30.99:8081',
-                        groupId: 'com.roboshop',
-                        version: "${env.VERSION}",
-                        repository: 'shipping',
-                        credentialsId: 'nexus-auth',
-                        artifacts: [
-                            [artifactId: "${env.ARTIFACT_ID}",
-                            classifier: '',
-                            file: artifactPath,
-                            type: 'jar']
-                        ]
-                    )
-                }
-            }
-        }
+        //             nexusArtifactUploader(
+        //                 nexusVersion: 'nexus3',
+        //                 protocol: 'http',
+        //                 nexusUrl: '3.89.30.99:8081',
+        //                 groupId: 'com.roboshop',
+        //                 version: "${env.VERSION}",
+        //                 repository: 'shipping',
+        //                 credentialsId: 'nexus-auth',
+        //                 artifacts: [
+        //                     [artifactId: "${env.ARTIFACT_ID}",
+        //                     classifier: '',
+        //                     file: artifactPath,
+        //                     type: 'jar']
+        //                 ]
+        //             )
+        //         }
+        //     }
+        // }
     }
     
     post { 
