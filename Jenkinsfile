@@ -8,13 +8,14 @@ pipeline {
         maven 'maven3'
     }
     environment {
-        SCANNER_HOME= tool 'sonar-scanner'
+        SCANNER_HOME = tool 'sonar-scanner'
     }
 
     stages {
         stage('Get the version') {
             steps {
                 script {
+                    // Read the pom.xml and extract the artifactId and version
                     def pom = readMavenPom file: 'pom.xml'
                     def artifactId = pom.artifactId
                     def version = pom.version
@@ -29,57 +30,59 @@ pipeline {
                 }
             }
         }
-            
-        stage ('Build') {
+        
+        stage('Build') {
             steps {
                 sh 'mvn clean package'
-                sh 'cd target'
-                sh 'ls -l'
+                sh 'ls -l target'  // List the contents of the target directory
             }
         }
 
+        // Uncomment if you want to run SonarQube analysis
         // stage('SonarQube Analysis') {
         //     steps {
-        //         script{
+        //         script {
         //             sh """
-        //             sonar-scanner 
+        //             ${SCANNER_HOME}/bin/sonar-scanner
         //             """
         //         }
         //     }
         // }
 
-        stage ('Publish Artifact') {
+        stage('Publish Artifact') {
             steps {
-                nexusArtifactUploader(
-                    nexusVersion: 'nexus3',
-                    protocol: 'http',
-                    nexusUrl: '3.89.30.99:8081',
-                    groupId: 'com.roboshop',
-                    version: "${env.VERSION}",
-                    repository: 'shipping',
-                    credentialsId: 'nexus-auth',
-                    artifacts: [
-                        [artifactId: shipping,
-                        classifier: '',
-                        file: 'shipping' + version + '.jar',
-                        type: 'jar']
-                    ]
+                script {
+                    def artifactPath = "target/${env.ARTIFACT_ID}-${env.VERSION}.jar"
+                    
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: '3.89.30.99:8081',
+                        groupId: 'com.roboshop',
+                        version: "${env.VERSION}",
+                        repository: 'shipping',
+                        credentialsId: 'nexus-auth',
+                        artifacts: [
+                            [artifactId: "${env.ARTIFACT_ID}",
+                            classifier: '',
+                            file: artifactPath,
+                            type: 'jar']
+                        ]
                     )
                 }
             }
         }
+    }
     
-        post { 
-            always { 
-                echo 'I will always say Hello again!'
-                // deleteDir()
-            }
-            failure { 
-                echo 'this runs when pipeline is failed, used generally to send some alerts'
-            }
-            success{
-                echo 'I will say Hello when pipeline is success'
-            }
+    post { 
+        always { 
+            echo 'I will always say Hello again!'
         }
-
+        failure { 
+            echo 'This runs when pipeline fails, generally used to send some alerts.'
+        }
+        success {
+            echo 'I will say Hello when the pipeline is successful.'
+        }
+    }
 }
