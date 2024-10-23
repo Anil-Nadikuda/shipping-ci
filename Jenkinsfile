@@ -10,13 +10,17 @@ pipeline {
     environment {
         SCANNER_HOME= tool 'sonar-scanner'
     }
+
     stages {
-        stage('Checkout Code') {
+        stage('Get the version') {
             steps {
-            git branch: 'main',credentialsId: 'git-cred', url: 'https://github.com/Anil-Nadikuda/shipping-ci.git'
-             sh 'ls -l'
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                    def shippingId = pom.artifactId
+                    echo "application version: ${env.SHIPPING_ID}"
                 }
             }
+        }
             
             stage ('Build') {
                 steps {
@@ -46,7 +50,7 @@ pipeline {
                             protocol: 'http',
                             nexusUrl: 'http://3.89.30.99:8081/repository/maven-releases/',
                             groupId: 'com.roboshop',
-                            version: "${packageVersion}",
+                            version: "${env.SHIPPING_ID}",
                             repository: 'maven-releases',
                             credentialsId: 'nexus-auth',
                             artifacts: [
@@ -56,6 +60,7 @@ pipeline {
                                 type: 'jar']
                             ]
                         )
+                    }
                 }
             }
     
@@ -70,6 +75,5 @@ pipeline {
             success{
                 echo 'I will say Hello when pipeline is success'
             }
-        }
     }
 }
