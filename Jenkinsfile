@@ -38,7 +38,7 @@ pipeline {
             stage('SonarQube Analysis') {
                 steps {
                     sh """
-                        sonar-scanner
+                        sonar-scanner -DskipTests=true
                         """
                 }
             }
