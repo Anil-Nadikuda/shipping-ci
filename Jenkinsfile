@@ -47,7 +47,7 @@ pipeline {
             //     }
             // }
 
-            stage('Nexus Artifact Upload') {
+            stage ('Nexus Artifact Upload') {
                 steps {
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
@@ -80,4 +80,5 @@ pipeline {
                 echo 'I will say Hello when pipeline is success'
             }
     }
+    
 }
