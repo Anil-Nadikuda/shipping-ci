@@ -33,8 +33,7 @@ pipeline {
             stage ('Build') {
                 steps {
                     sh 'mvn clean package'
-                    sh 'pwd'
-                    sh 'cd /home/centos/jenkins-agent/workspace/blue-green/target'
+                    sh 'cd target'
                     sh 'ls -l'
                 }
             }
@@ -49,25 +48,25 @@ pipeline {
             //     }
             // }
 
-            // stage ('Nexus Artifact Upload') {
-            //     steps {
-            //         nexusArtifactUploader(
-            //             nexusVersion: 'nexus3',
-            //             protocol: 'http',
-            //             nexusUrl: 'http://3.89.30.99:8081/repository/shipping/',
-            //             groupId: 'com.roboshop',
-            //             version: "${env.VERSION}",
-            //             repository: 'shipping',
-            //             credentialsId: 'nexus-auth',
-            //             artifacts: [
-            //                 [artifactId: shipping,
-            //                 classifier: '',
-            //                 file: 'shipping' + version + '.jar',
-            //                 type: 'jar']
-            //             ]
-            //             )
-            //         }
-            //     }
+            stage ('Nexus Artifact Upload') {
+                steps {
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: 'http://3.89.30.99:8081/repository/shipping/',
+                        groupId: 'com.roboshop',
+                        version: "${env.VERSION}",
+                        repository: 'shipping',
+                        credentialsId: 'nexus-auth',
+                        artifacts: [
+                            [artifactId: shipping,
+                            classifier: '',
+                            file: 'shipping' + version + '.jar',
+                            type: 'jar']
+                        ]
+                        )
+                    }
+                }
             }
     
         post { 
