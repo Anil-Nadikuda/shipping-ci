@@ -30,44 +30,44 @@ pipeline {
             }
         }
             
-            stage ('Build') {
-                steps {
-                    sh 'mvn clean package'
-                    sh 'cd target'
-                    sh 'ls -l'
+        stage ('Build') {
+            steps {
+                sh 'mvn clean package'
+                sh 'cd target'
+                sh 'ls -l'
+            }
+        }
+
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         script{
+        //             sh """
+        //             sonar-scanner 
+        //             """
+        //         }
+        //     }
+        // }
+
+        stage ('Publish Artifact') {
+            steps {
+                nexusArtifactUploader(
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: '3.89.30.99:8081',
+                    groupId: 'com.roboshop',
+                    version: "${env.VERSION}",
+                    repository: 'shipping',
+                    credentialsId: 'nexus-auth',
+                    artifacts: [
+                        [artifactId: shipping,
+                        classifier: '',
+                        file: 'shipping' + version + '.jar',
+                        type: 'jar']
+                    ]
+                    )
                 }
             }
-
-            // stage('SonarQube Analysis') {
-            //     steps {
-            //         script{
-            //             sh """
-            //             sonar-scanner 
-            //             """
-            //         }
-            //     }
-            // }
-
-            stage ('Publish Artifact') {
-                steps {
-                    nexusArtifactUploader(
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        nexusUrl: '3.89.30.99:8081',
-                        groupId: 'com.roboshop',
-                        version: "${env.VERSION}",
-                        repository: 'shipping',
-                        credentialsId: 'nexus-auth',
-                        artifacts: [
-                            [artifactId: shipping,
-                            classifier: '',
-                            file: 'shipping' + version + '.jar',
-                            type: 'jar']
-                        ]
-                        )
-                    }
-                }
-            }
+        }
     
         post { 
             always { 
@@ -80,6 +80,6 @@ pipeline {
             success{
                 echo 'I will say Hello when pipeline is success'
             }
-    }
+        }
 
 }
