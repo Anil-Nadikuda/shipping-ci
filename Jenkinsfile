@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    ${SCANNER_HOME}/bin/sonar-scanner
+                    sonar-scanner
                     """
                 }
             }
