@@ -38,16 +38,16 @@ pipeline {
             }
         }
 
-        // Uncomment if you want to run SonarQube analysis
-        // stage('SonarQube Analysis') {
-        //     steps {
-        //         script {
-        //             sh """
-        //             ${SCANNER_HOME}/bin/sonar-scanner
-        //             """
-        //         }
-        //     }
-        // }
+        //Uncomment if you want to run SonarQube analysis
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    sh """
+                    ${SCANNER_HOME}/bin/sonar-scanner
+                    """
+                }
+            }
+        }
 
         stage('Publish Artifact') {
             steps {
