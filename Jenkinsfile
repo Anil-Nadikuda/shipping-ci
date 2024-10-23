@@ -48,12 +48,12 @@ pipeline {
             //     }
             // }
 
-            stage ('Nexus Artifact Upload') {
+            stage ('Publish Artifact') {
                 steps {
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
-                        nexusUrl: 'http://3.89.30.99:8081/repository/shipping/',
+                        nexusUrl: '3.89.30.99:8081',
                         groupId: 'com.roboshop',
                         version: "${env.VERSION}",
                         repository: 'shipping',
