@@ -7,6 +7,9 @@ pipeline {
     tools {
         maven 'maven3'
     }
+    environment {
+        SCANNER_HOME= tool 'sonar-scanner'
+    }
     triggers {
         // Trigger the pipeline when there's a GitHub push event
         githubPush()
@@ -21,7 +24,8 @@ pipeline {
             
             stage ('Build') {
                 steps {
-                    sh 'mvn package'
+                    sh 'mvn clean package'
+                    sh 'ls -l'
                 }
             }
 
@@ -44,7 +48,7 @@ pipeline {
     post { 
         always { 
             echo 'I will always say Hello again!'
-            deleteDir()
+            //deleteDir()
         }
         failure { 
             echo 'this runs when pipeline is failed, used generally to send some alerts'
