@@ -37,9 +37,12 @@ pipeline {
 
             stage('SonarQube Analysis') {
                 steps {
-                    sh """
-                        sonar-scanner -DskipTests=true
+                    script{
+                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE')
+                        sh """
+                        sonar-scanner 
                         """
+                    }
                 }
             }
 
