@@ -16,8 +16,16 @@ pipeline {
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
-                    def shippingId = pom.version
-                    echo "application version: ${env.SHIPPING_ID}"
+                    def artifactId = pom.artifactId
+                    def version = pom.version
+                    
+                    // Print the extracted artifactId and version
+                    echo "Artifact ID: ${artifactId}"
+                    echo "Version: ${version}"
+
+                    // Use these values in further stages if needed
+                    env.ARTIFACT_ID = artifactId
+                    env.VERSION = version
                 }
             }
         }
@@ -46,7 +54,7 @@ pipeline {
                         protocol: 'http',
                         nexusUrl: 'http://3.89.30.99:8081/repository/maven-releases/',
                         groupId: 'com.roboshop',
-                        version: "${env.SHIPPING_ID}",
+                        version: "${env.VERSION}",
                         repository: 'maven-releases',
                         credentialsId: 'nexus-auth',
                         artifacts: [
