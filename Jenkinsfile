@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
-                    def shippingId = pom.artifactId
+                    def shippingId = pom.version
                     echo "application version: ${env.SHIPPING_ID}"
                 }
             }
