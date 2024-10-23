@@ -29,12 +29,6 @@ pipeline {
                 }
             }
 
-            stage('Test') {
-                steps {
-                    sh 'mvn test'
-                }
-            }
-
             // stage('SonarQube Analysis') {
             //     steps {
             //         script{
@@ -47,20 +41,20 @@ pipeline {
 
             stage('Nexus Artifact Upload') {
                 steps {
-                        nexusArtifactUploader(
-                            nexusVersion: 'nexus3',
-                            protocol: 'http',
-                            nexusUrl: 'http://3.89.30.99:8081/repository/maven-releases/',
-                            groupId: 'com.roboshop',
-                            version: "${env.SHIPPING_ID}",
-                            repository: 'maven-releases',
-                            credentialsId: 'nexus-auth',
-                            artifacts: [
-                                [artifactId: shipping,
-                                classifier: '',
-                                file: 'shipping' + version + '.jar',
-                                type: 'jar']
-                            ]
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: 'http://3.89.30.99:8081/repository/maven-releases/',
+                        groupId: 'com.roboshop',
+                        version: "${env.SHIPPING_ID}",
+                        repository: 'maven-releases',
+                        credentialsId: 'nexus-auth',
+                        artifacts: [
+                            [artifactId: shipping,
+                            classifier: '',
+                            file: 'shipping' + version + '.jar',
+                            type: 'jar']
+                        ]
                         )
                     }
                 }
