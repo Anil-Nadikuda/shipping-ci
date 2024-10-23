@@ -33,6 +33,8 @@ pipeline {
             stage ('Build') {
                 steps {
                     sh 'mvn clean package'
+                    sh 'pwd'
+                    sh 'cd /home/centos/jenkins-agent/workspace/blue-green/target'
                     sh 'ls -l'
                 }
             }
