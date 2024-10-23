@@ -47,25 +47,25 @@ pipeline {
             //     }
             // }
 
-            stage ('Nexus Artifact Upload') {
-                steps {
-                    nexusArtifactUploader(
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        nexusUrl: 'http://3.89.30.99:8081/repository/maven-releases/',
-                        groupId: 'com.roboshop',
-                        version: "${env.VERSION}",
-                        repository: 'maven-releases',
-                        credentialsId: 'nexus-auth',
-                        artifacts: [
-                            [artifactId: shipping,
-                            classifier: '',
-                            file: 'shipping' + version + '.jar',
-                            type: 'jar']
-                        ]
-                        )
-                    }
-                }
+            // stage ('Nexus Artifact Upload') {
+            //     steps {
+            //         nexusArtifactUploader(
+            //             nexusVersion: 'nexus3',
+            //             protocol: 'http',
+            //             nexusUrl: 'http://3.89.30.99:8081/repository/shipping/',
+            //             groupId: 'com.roboshop',
+            //             version: "${env.VERSION}",
+            //             repository: 'shipping',
+            //             credentialsId: 'nexus-auth',
+            //             artifacts: [
+            //                 [artifactId: shipping,
+            //                 classifier: '',
+            //                 file: 'shipping' + version + '.jar',
+            //                 type: 'jar']
+            //             ]
+            //             )
+            //         }
+            //     }
             }
     
         post { 
@@ -80,5 +80,5 @@ pipeline {
                 echo 'I will say Hello when pipeline is success'
             }
     }
-    
+
 }
