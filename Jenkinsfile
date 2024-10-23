@@ -35,16 +35,15 @@ pipeline {
                 }
             }
 
-            stage('SonarQube Analysis') {
-                steps {
-                    script{
-                        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE')
-                        sh """
-                        sonar-scanner 
-                        """
-                    }
-                }
-            }
+            // stage('SonarQube Analysis') {
+            //     steps {
+            //         script{
+            //             sh """
+            //             sonar-scanner 
+            //             """
+            //         }
+            //     }
+            // }
 
             stage('Nexus Artifact Upload') {
                 steps {
