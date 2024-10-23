@@ -49,15 +49,15 @@ pipeline {
         //     }
         // }
 
-        stage('Trivy Analysis') {
-            steps {
-                script {
-                    sh """
-                    trivy fs --format table -o fs.html .
-                    """
-                }
-            }
-        }
+        // stage('Trivy Analysis') {
+        //     steps {
+        //         script {
+        //             sh """
+        //             trivy fs --format table -o fs.html .
+        //             """
+        //         }
+        //     }
+        // }
 
         // stage('Publish Artifact') {
         //     steps {
