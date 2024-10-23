@@ -42,6 +42,24 @@ pipeline {
                         """
                 }
             }
+            stage('Nexus Artifact Upload') {
+                steps {
+                        nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: 'http://3.89.30.99:8081/repository/maven-releases/',
+                        groupId: 'com.roboshop',
+                        version: "${packageVersion}",
+                        repository: 'maven-releases',
+                        credentialsId: 'nexus-auth',
+                        artifacts: [
+                            [artifactId: shipping,
+                            classifier: '',
+                            file: 'shipping' + version + '.jar',
+                            type: 'jar']
+                        ]
+                    )
+                }
         }
 
 
