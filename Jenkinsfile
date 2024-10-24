@@ -86,7 +86,7 @@ pipeline {
         stage('Docker image creation') {
             steps {
                 script {
-                    withDockerRegistry('https://index.docker.io/v1/',credentialsId: 'dockerhub_cred') {
+                    withDockerRegistry([url: 'https://index.docker.io/v1/', credentialsId: 'dockerhub_cred']) {
                         sh "docker build -t anilnadikuda/shipping:v1 ."
                         sh "docker push anilnadikuda/shipping:v1"
                     }  
