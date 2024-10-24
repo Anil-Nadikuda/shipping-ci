@@ -39,8 +39,9 @@ pipeline {
         
         stage('Build') {
             steps {
-                sh 'mvn clean package'
-                sh 'ls -l target'  // List the contents of the target directory
+                echo "maven package"
+                // sh 'mvn clean package'
+                // sh 'ls -l target'  // List the contents of the target directory
             }
         }
 
@@ -93,12 +94,13 @@ pipeline {
         }
         stage('Docker image creation') {
             steps {
-                script {
-                    withDockerRegistry([url: 'https://index.docker.io/v1/', credentialsId: 'dockerhub_cred']) {
-                        sh "docker build -t anilnadikuda/shipping:v1 ."
-                        sh "docker push anilnadikuda/shipping:v1"
-                    }  
-                } 
+                // script {
+                //     withDockerRegistry([url: 'https://index.docker.io/v1/', credentialsId: 'dockerhub_cred']) {
+                //         sh "docker build -t anilnadikuda/shipping:v1 ."
+                //         sh "docker push anilnadikuda/shipping:v1"
+                //     }  
+                // } 
+                echo "Docker image create and push"
             }
         }
         ////DEPLOYMENT
@@ -106,7 +108,7 @@ pipeline {
             steps {
                 script {
                         sh "cd mongodb && helm install mongodb ."
-                        sh "cd ../mysql && helm install mysql ."
+                        sh "cd mysql && helm install mysql ."
                     }  
                 } 
             }
