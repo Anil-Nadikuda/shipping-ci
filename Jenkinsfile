@@ -87,7 +87,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker.withRegistry('https://hub.docker.com/', "$DOCKER_CREDENTIALS_ID")
+                    docker.withRegistry('https://index.docker.io/v1/', "$DOCKER_CREDENTIALS_ID")
                     docker build -t anilnadikuda/shipping:v1 . 
                     docker push anilnadikuda/shipping:v1
                     """
