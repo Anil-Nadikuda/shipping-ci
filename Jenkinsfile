@@ -9,7 +9,7 @@ pipeline {
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
-        DOCKER_CREDENTIALS_ID = 'dockerhub_cred'
+        
     }
 
     stages {
@@ -86,12 +86,10 @@ pipeline {
         stage('Docker image creation') {
             steps {
                 script {
-                    sh """
-                    docker.withRegistry('https://index.docker.io/v1/', "$DOCKER_CREDENTIALS_ID")
-                    docker build -t anilnadikuda/shipping:v1 . 
-                    docker push anilnadikuda/shipping:v1
-                    """
-                }
+                    withDockerRegistry('https://index.docker.io/v1/',credentialsId: 'dockerhub_cred') {
+                        sh "docker build -t shipping:v1 ."
+                        sh "docker push shipping:v1"
+                    }   
             }
         }
     }
