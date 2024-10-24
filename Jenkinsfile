@@ -105,18 +105,15 @@ pipeline {
         stage('Install Dependent Services') {
             steps {
                 script {
-                        sh "cd mongodb"
-                        sh "helm install mongodb ."
-                        sh "cd ../mysql"
-                        sh "helm install mysql ."
+                        sh "cd mongodb && helm install mongodb ."
+                        sh "cd ../mysql && helm install mysql ."
                     }  
                 } 
             }
         stage('Deploying Shipping Application') {
             steps {
                 script {
-                        sh "cd shipping"
-                        sh "helm install shipping ."
+                        sh "cd shipping && helm install shipping ."
                     }  
                 } 
             }
