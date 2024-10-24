@@ -4,6 +4,11 @@ pipeline {
             label 'AGENT'
         }
     }
+     parameters {
+        choice(name: 'DEPLOY_ENV', choices: ['blue', 'green'], description: 'Choose which environment to deploy: Blue or Green')
+        choice(name: 'DOCKER_TAG', choices: ['blue', 'green'], description: 'Choose the Docker image tag for the deployment')
+        booleanParam(name: 'SWITCH_TRAFFIC', defaultValue: false, description: 'Switch traffic between Blue and Green')
+    }
     tools {
         maven 'maven3'
     }
@@ -39,50 +44,53 @@ pipeline {
             }
         }
 
-        //Uncomment if you want to run SonarQube analysis
-        // stage('SonarQube Analysis') {
-        //     steps {
-        //         script {
-        //             sh """
-        //             sonar-scanner
-        //             """
-        //         }
-        //     }
-        // }
+        
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // sh """
+                    // sonar-scanner
+                    // """
+                    echo "Sonar-scanner"
+                }
+            }
+        }
 
-        // stage('Trivy Analysis') {
-        //     steps {
-        //         script {
-        //             sh """
-        //             trivy fs --format table -o fs.html .
-        //             """
-        //         }
-        //     }
-        // }
+        stage('Trivy Analysis') {
+            steps {
+                script {
+                    // sh """
+                    // trivy fs --format table -o fs.html .
+                    // """
+                    echo "Trivy Scanning"
+                }
+            }
+        }
 
-        // stage('Publish Artifact') {
-        //     steps {
-        //         script {
-        //             def artifactPath = "target/${env.ARTIFACT_ID}-${env.VERSION}.jar"
+        stage('Publish Artifact') {
+            steps {
+                // script {
+                //     def artifactPath = "target/${env.ARTIFACT_ID}-${env.VERSION}.jar"
                     
-        //             nexusArtifactUploader(
-        //                 nexusVersion: 'nexus3',
-        //                 protocol: 'http',
-        //                 nexusUrl: '3.89.30.99:8081',
-        //                 groupId: 'com.roboshop',
-        //                 version: "${env.VERSION}",
-        //                 repository: 'shipping',
-        //                 credentialsId: 'nexus-auth',
-        //                 artifacts: [
-        //                     [artifactId: "${env.ARTIFACT_ID}",
-        //                     classifier: '',
-        //                     file: artifactPath,
-        //                     type: 'jar']
-        //                 ]
-        //             )
-        //         }
-        //     }
-        // }
+                //     nexusArtifactUploader(
+                //         nexusVersion: 'nexus3',
+                //         protocol: 'http',
+                //         nexusUrl: '3.89.30.99:8081',
+                //         groupId: 'com.roboshop',
+                //         version: "${env.VERSION}",
+                //         repository: 'shipping',
+                //         credentialsId: 'nexus-auth',
+                //         artifacts: [
+                //             [artifactId: "${env.ARTIFACT_ID}",
+                //             classifier: '',
+                //             file: artifactPath,
+                //             type: 'jar']
+                //         ]
+                //     )
+                // }
+                echo "Nexus Artifact upload"
+            }
+        }
         stage('Docker image creation') {
             steps {
                 script {
@@ -93,7 +101,28 @@ pipeline {
                 } 
             }
         }
+        ////DEPLOYMENT
+        stage('Install Dependent Services') {
+            steps {
+                script {
+                        sh "cd mongodb"
+                        sh "helm install mongodb ."
+                        sh "cd ../mysql"
+                        sh "helm install mysql ."
+                    }  
+                } 
+            }
+        stage('Deploying Shipping Application') {
+            steps {
+                script {
+                        sh "cd shipping"
+                        sh "helm install shipping ."
+                    }  
+                } 
+            }
     }
+
+
     
     post { 
         always { 
