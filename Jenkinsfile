@@ -86,7 +86,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker built -t anilnadikuda/shipping:v1 . 
+                    docker build -t anilnadikuda/shipping:v1 . 
                     docker push anilnadikuda/shipping:v1
                     """
                 }
