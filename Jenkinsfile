@@ -9,6 +9,7 @@ pipeline {
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
+        DOCKER_CREDENTIALS_ID = 'dockerhub_cred'
     }
 
     stages {
@@ -86,6 +87,7 @@ pipeline {
             steps {
                 script {
                     sh """
+                    docker.withRegistry('https://hub.docker.com/', "$DOCKER_CREDENTIALS_ID")
                     docker build -t anilnadikuda/shipping:v1 . 
                     docker push anilnadikuda/shipping:v1
                     """
